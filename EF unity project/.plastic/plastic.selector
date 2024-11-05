@@ -1,0 +1,4 @@
+repository "EF unity project@igor0510@cloud"
+  path "/"
+    br "/main"
+    co "/main"
