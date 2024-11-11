@@ -14,12 +14,13 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("S");
         animator = GetComponent<Animator>();  // Получаем компонент Animator
         agent = GetComponent<NavMeshAgent>();  // Получаем компонент NavMeshAgent
         agent.stoppingDistance = attackRange;  // Устанавливаем расстояние для остановки перед целью
 
         // Проигрываем Idle для начала
-        animator.Play("Idle");
+        
     }
 
     private void Update()
@@ -32,6 +33,7 @@ public class Enemy : MonoBehaviour
 
     private void MoveTowardsTarget()
     {
+        /*
         float distance = Vector3.Distance(transform.position, target.position);
 
         if (distance > attackRange)  // Если враг не достиг цели
@@ -39,12 +41,13 @@ public class Enemy : MonoBehaviour
             agent.SetDestination(target.position);  // Двигаем врага к цели
 
             // Включаем анимацию Idle для отображения движения
-            animator.Play("Idle");
+            
         }
         else
         {
             Attack();  // Если в радиусе атаки, начинаем атаковать
-        }
+            agent.Stop(true);
+        }*/
     }
 
     private void Attack()
@@ -52,7 +55,7 @@ public class Enemy : MonoBehaviour
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackDelay)
         {
-            animator.Play("Attack");  // Проигрываем анимацию атаки
+              // Проигрываем анимацию атаки
 
             // Логика атаки (например, уменьшение HP башни)
             // towerScript.TakeDamage(attackDamage);
@@ -61,11 +64,16 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    [SerializeField] private Animator EnemyAnimatorController;
+
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("S");
         if (other.CompareTag("Tower"))
         {
-            target = other.transform;  // Устанавливаем цель при попадании в радиус башни
+            //target = other.transform;  // Устанавливаем цель при попадании в радиус башни
+            EnemyAnimatorController.SetBool("IsAttacking", true);
+            Debug.Log("Enter");
         }
     }
 
@@ -73,8 +81,9 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Tower"))
         {
+            Debug.Log("E");
             target = null;  // Сбрасываем цель, если враг покидает радиус башни
-            animator.Play("Idle");  // Останавливаем анимацию на Idle
+            EnemyAnimatorController.SetBool("IsAttacking", false);
         }
     }
 }
