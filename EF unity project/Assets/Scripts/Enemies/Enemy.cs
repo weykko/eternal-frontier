@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +12,7 @@ public class Enemy : MonoBehaviour
     public float attackRange = 1f;  // Радиус для начала атаки
     public float attackDelay = 1f;  // Задержка между атаками
     private float attackTimer = 0f;  // Таймер для задержки между атаками
+    public float moveSpeed = 1f;
 
     private void Start()
     {
@@ -18,17 +20,29 @@ public class Enemy : MonoBehaviour
         animator = GetComponent<Animator>();  // Получаем компонент Animator
         agent = GetComponent<NavMeshAgent>();  // Получаем компонент NavMeshAgent
         agent.stoppingDistance = attackRange;  // Устанавливаем расстояние для остановки перед целью
+        agent.speed = moveSpeed;
 
         // Проигрываем Idle для начала
-        
+
     }
 
     private void Update()
     {
+        float distance = Vector3.Distance(transform.position, target.position);
         if (target != null)
         {
-            MoveTowardsTarget();  // Двигаем врага к цели
+            transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * moveSpeed);
         }
+        if (distance < attackRange)
+        {
+            EnemyAnimatorController.SetBool("IsAttacking", true);
+        }
+        
+
+        //if (target != null)
+        //{
+        //    MoveTowardsTarget();  // Двигаем врага к цели
+        //}
     }
 
     private void MoveTowardsTarget()
