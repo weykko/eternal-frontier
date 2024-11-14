@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     public float attackRange = 1f;  // Радиус для начала атаки
     public float attackDelay = 1f;  // Задержка между атаками
     private float attackTimer = 0f;  // Таймер для задержки между атаками
-    public float moveSpeed = 1f;
+    public float moveSpeed = 0.5f;
 
     private void Start()
     {
@@ -33,10 +33,10 @@ public class Enemy : MonoBehaviour
         {
             transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * moveSpeed);
         }
-        if (distance < attackRange)
-        {
-            EnemyAnimatorController.SetBool("IsAttacking", true);
-        }
+        //if (distance < attackRange)
+        //{
+        //    EnemyAnimatorController.SetBool("IsAttacking", true);
+        //}
         
 
         //if (target != null)
@@ -78,26 +78,26 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    [SerializeField] private Animator EnemyAnimatorController;
+    //[SerializeField] private Animator EnemyAnimatorController;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("S");
-        if (other.CompareTag("Tower"))
-        {
-            //target = other.transform;  // Устанавливаем цель при попадании в радиус башни
-            EnemyAnimatorController.SetBool("IsAttacking", true);
-            Debug.Log("Enter");
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    Debug.Log("S");
+    //    if (other.CompareTag("Tower"))
+    //    {
+    //        //target = other.transform;  // Устанавливаем цель при попадании в радиус башни
+    //        EnemyAnimatorController.SetBool("IsAttacking", true);
+    //        Debug.Log("Enter");
+    //    }
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Tower"))
-        {
-            Debug.Log("E");
-            target = null;  // Сбрасываем цель, если враг покидает радиус башни
-            EnemyAnimatorController.SetBool("IsAttacking", false);
-        }
-    }
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.CompareTag("Tower"))
+    //    {
+    //        Debug.Log("E");
+    //        target = null;  // Сбрасываем цель, если враг покидает радиус башни
+    //        EnemyAnimatorController.SetBool("IsAttacking", false);
+    //    }
+    //}
 }
