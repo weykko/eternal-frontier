@@ -558,7 +558,7 @@ Transform:
   m_GameObject: {fileID: 1663886618}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.87395924, z: -0, w: 0.48599923}
-  m_LocalPosition: {x: 33.8, y: -0, z: 20.2}
+  m_LocalPosition: {x: -34.6, y: -0, z: 28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -599,10 +599,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 100
-  currentHP: 0
-  attackDamage: 10
-  attackRate: 1
-  towerCollider: {fileID: 0}
 --- !u!208 &1663886622
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -1172,7 +1168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4175440153622967514, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -31
+      value: -3.8
       objectReference: {fileID: 0}
     - target: {fileID: 4175440153622967514, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1180,7 +1176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4175440153622967514, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -35.7
+      value: -16.3
       objectReference: {fileID: 0}
     - target: {fileID: 4175440153622967514, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1223,9 +1219,25 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7544119946079999568, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
+      propertyPath: attackDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7544119946079999568, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
+      propertyPath: attackRange
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7544119946079999568, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
+      propertyPath: attackDamage
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7544119946079999568, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
       propertyPath: EnemyAnimatorController
       value: 
       objectReference: {fileID: 1785217890}
+    - target: {fileID: 8576812922734128584, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
+      propertyPath: m_Speed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8576812922734128584, guid: c010480c67b409c4fad85948cb48fd33, type: 3}
       propertyPath: m_Radius
       value: 1.39

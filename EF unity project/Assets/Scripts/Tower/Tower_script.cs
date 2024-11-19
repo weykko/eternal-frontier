@@ -1,41 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Tower_script : MonoBehaviour
 {
-    public float maxHP = 100f;  // Максимальное количество здоровья
-    public float currentHP;  // Текущее количество здоровья
-    public float attackDamage = 10f;  // Урон, который наносит башня
-    public float attackRate = 1f;  // Частота атак (в секундах)
-    public Collider towerCollider;  // Ссылка на коллайдер башни (для проверки на попадание врага)
-
-    private bool isAttacking = false;  // Флаг для проверки, атакует ли башня
+    public int maxHP = 100;  
+    private int currentHP;  
 
     private void Start()
     {
-        currentHP = maxHP;  // Изначально здоровье башни равно максимальному
+        currentHP = maxHP;  
     }
 
-
-
-    // Метод для получения урона башней
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        currentHP -= damage;
+        currentHP -= damage;  
+        Debug.Log($"Башня получила {damage} урона. Текущее HP: {currentHP}"); // проверка хп на консоли(убрать)!!!!!
 
         if (currentHP <= 0)
         {
-            DestroyTower();
+            Die();  
         }
     }
 
-    // Метод для разрушения башни
-    private void DestroyTower()
+    private void Die()
     {
-        // Можно добавить эффекты разрушения, анимации, звуки и т. д.
-        Debug.Log("Tower Destroyed!");
-        Destroy(gameObject);  // Уничтожаем объект башни
+        Destroy(gameObject); 
     }
 }
