@@ -8,10 +8,10 @@ public class Enemy : MonoBehaviour
 {
     private Animator animator;  
     public Transform target; // башня
-    public float attackRange = 12; 
-    public float attackDelay = 1f;  // Задержка между атаками
-    private float attackTimer = 0f;  // Таймер для задержки между атаками
-    public float moveSpeed = 1f;
+    private float attackRange = 1; 
+    private float attackDelay = 1.67f;  // Задержка между атаками
+    private float attackTimer = 1.17f;  // Таймер для задержки между атаками
+    private float moveSpeed = 0.5f;
 
     private Tower_script towerScript;  // Ссылка на скрипт башни для нанесения урона
 
@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
             float distance = Vector3.Distance(transform.position, target.position);
             Debug.Log($"Расстояние до цели: {distance}, радиус атаки: {attackRange}"); // для проверки условия атаки на консоли(потом убрать)!!!!!!
 
-            if (distance <= attackRange)
+            if (distance <= attackRange + 8)
             {
                 Attack();
             }

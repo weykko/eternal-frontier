@@ -10,7 +10,7 @@ public class Attack_anim : StateMachineBehaviour
     public float attackRange = 15;
     private bool isAttacking = false;
     NavMeshAgent agent;
-    // Флаг для отслеживания состояния атаки
+    
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -25,14 +25,14 @@ public class Attack_anim : StateMachineBehaviour
 
         if (distance < attackRange)
         {
-            //agent.isStopped = true;
+            
             animator.SetBool("IsAttacking", true);
            
            
         }
         else
         {
-            //agent.isStopped = false;
+            
             animator.SetBool("IsAttacking", false);
          
         }
