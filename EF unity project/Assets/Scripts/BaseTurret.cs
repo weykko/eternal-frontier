@@ -9,6 +9,7 @@ public class BaseTurret : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("cnfhn ");
         // Find the TurretHead component in the turret's hierarchy
         turretHead = GetComponentInChildren<TurretHead>();
         // Detect enemies already inside the turret's range at the start
@@ -22,6 +23,7 @@ public class BaseTurret : MonoBehaviour
                 turretHead.AddTarget(collider.gameObject);  // Add enemies already inside the range to the entered list
             }
         }
+        
     }
 
     private void OnTriggerEnter(Collider other)

@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
-
 
 public class BuildingsGrid : MonoBehaviour
 {
@@ -13,11 +8,15 @@ public class BuildingsGrid : MonoBehaviour
     private Building flyingBuilding;
     private Camera mainCamera;
 
+    private float cellSize; // размер ячейки
+    private Vector3 planeOrigin; // левый нижний угол 
     private void Awake()
     {
         grid = new Building[GridSize.x, GridSize.y];
-
         mainCamera = Camera.main;
+        float planeSize = transform.localScale.x * 10f; // это потому что у меня scale 10
+        cellSize = planeSize / GridSize.x;
+        planeOrigin = transform.position - new Vector3(planeSize / 2, 0, planeSize / 2);         //левый нижний угол плоскости
     }
 
     public void StartPlacingBuilding(Building buildingPrefab)
@@ -41,8 +40,9 @@ public class BuildingsGrid : MonoBehaviour
             {
                 Vector3 worldPosition = ray.GetPoint(position);
 
-                int x = Mathf.RoundToInt(worldPosition.x);
-                int y = Mathf.RoundToInt(worldPosition.z);
+                Vector3 localPosition = worldPosition - planeOrigin;
+                int x = Mathf.FloorToInt(localPosition.x / cellSize);
+                int y = Mathf.FloorToInt(localPosition.z / cellSize);
 
                 bool available = true;
 
@@ -51,7 +51,8 @@ public class BuildingsGrid : MonoBehaviour
 
                 if (available && IsPlaceTaken(x, y)) available = false;
 
-                flyingBuilding.transform.position = new Vector3(x, 0, y);
+                flyingBuilding.transform.position = new Vector3( x * cellSize, 0, y * cellSize) + planeOrigin; //финальная позиция
+
                 flyingBuilding.SetTransparent(available);
 
                 if (available && Input.GetMouseButtonDown(0))
