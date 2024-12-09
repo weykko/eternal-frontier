@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tower
   - Enemy
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - enemies
   - Water
   - UI
-  - 
+  - Obstacle
   - 
   - 
   - 

@@ -8,15 +8,17 @@ public class BuildingsGrid : MonoBehaviour
     private Building flyingBuilding;
     private Camera mainCamera;
 
-    private float cellSize; // размер €чейки
-    private Vector3 planeOrigin; // левый нижний угол 
+    private float cellSize; // –азмер €чейки
+    private Vector3 planeOrigin; // Ћевый нижний угол
+    private bool isRotated = false; // —осто€ние поворота
+
     private void Awake()
     {
         grid = new Building[GridSize.x, GridSize.y];
         mainCamera = Camera.main;
-        float planeSize = transform.localScale.x * 10f; // это потому что у мен€ scale 10
+        float planeSize = transform.localScale.x * 10f; // Ёто потому что у мен€ scale 10
         cellSize = planeSize / GridSize.x;
-        planeOrigin = transform.position - new Vector3(planeSize / 2, 0, planeSize / 2);         //левый нижний угол плоскости
+        planeOrigin = transform.position - new Vector3(planeSize / 2, 0, planeSize / 2); 
     }
 
     public void StartPlacingBuilding(Building buildingPrefab)
@@ -27,6 +29,7 @@ public class BuildingsGrid : MonoBehaviour
         }
 
         flyingBuilding = Instantiate(buildingPrefab);
+        isRotated = false; 
     }
 
     private void Update()
@@ -44,30 +47,39 @@ public class BuildingsGrid : MonoBehaviour
                 int x = Mathf.FloorToInt(localPosition.x / cellSize);
                 int y = Mathf.FloorToInt(localPosition.z / cellSize);
 
+                Vector2Int buildingSize = isRotated
+                    ? new Vector2Int(flyingBuilding.Size.y, flyingBuilding.Size.x)
+                    : flyingBuilding.Size;
+
                 bool available = true;
 
-                if (x < 0 || x > GridSize.x - flyingBuilding.Size.x) available = false;
-                if (y < 0 || y > GridSize.y - flyingBuilding.Size.y) available = false;
+                if (x < 0 || x > GridSize.x - buildingSize.x) available = false;
+                if (y < 0 || y > GridSize.y - buildingSize.y) available = false;
 
-                if (available && IsPlaceTaken(x, y)) available = false;
+                if (available && IsPlaceTaken(x, y, buildingSize)) available = false;
 
-                flyingBuilding.transform.position = new Vector3( x * cellSize, 0, y * cellSize) + planeOrigin; //финальна€ позици€
+                flyingBuilding.transform.position = new Vector3(x * cellSize, 0, y * cellSize) + planeOrigin; 
+                flyingBuilding.transform.rotation = Quaternion.Euler(0, isRotated ? 90 : 0, 0); // поворот здани€
 
                 flyingBuilding.SetTransparent(available);
 
                 if (available && Input.GetMouseButtonDown(0))
                 {
-                    PlaceFlyingBuilding(x, y);
+                    PlaceFlyingBuilding(x, y, buildingSize);
+                }
+                else if (Input.GetMouseButtonDown(1))
+                {
+                    isRotated = !isRotated; // вращение здани€
                 }
             }
         }
     }
 
-    private bool IsPlaceTaken(int placeX, int placeY)
+    private bool IsPlaceTaken(int placeX, int placeY, Vector2Int size)
     {
-        for (int x = 0; x < flyingBuilding.Size.x; x++)
+        for (int x = 0; x < size.x; x++)
         {
-            for (int y = 0; y < flyingBuilding.Size.y; y++)
+            for (int y = 0; y < size.y; y++)
             {
                 if (grid[placeX + x, placeY + y] != null) return true;
             }
@@ -76,11 +88,11 @@ public class BuildingsGrid : MonoBehaviour
         return false;
     }
 
-    private void PlaceFlyingBuilding(int placeX, int placeY)
+    private void PlaceFlyingBuilding(int placeX, int placeY, Vector2Int size)
     {
-        for (int x = 0; x < flyingBuilding.Size.x; x++)
+        for (int x = 0; x < size.x; x++)
         {
-            for (int y = 0; y < flyingBuilding.Size.y; y++)
+            for (int y = 0; y < size.y; y++)
             {
                 grid[placeX + x, placeY + y] = flyingBuilding;
             }
