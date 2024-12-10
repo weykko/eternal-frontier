@@ -109,6 +109,11 @@ public class BuildingsGrid : MonoBehaviour
         }
 
         flyingBuilding.SetNormal();
+
+        // Обновление графа A* Pathfinding
+        Bounds bounds = new Bounds(flyingBuilding.transform.position, new Vector3(size.x * cellSize, 1, size.y * cellSize));
+        AstarPath.active.UpdateGraphs(bounds);
+
         flyingBuilding = null;
     }
 }

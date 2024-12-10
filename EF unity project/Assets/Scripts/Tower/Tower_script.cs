@@ -1,32 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Tower_script : MonoBehaviour
 {
-    public int maxHP = 100;  
-    private int currentHP;  
+    public int maxHP = 100;
+    private int currentHP;
+
+    public float AttackRange = 2.0f; // Радиус атаки башни
 
     private void Start()
     {
-        currentHP = maxHP;  
+        currentHP = maxHP;
     }
 
     public void TakeDamage(int damage)
     {
-        currentHP -= damage;  
-        Debug.Log($"Башня получила {damage} урона. Текущее HP: {currentHP}"); // проверка хп на консоли(убрать)!!!!!
+        currentHP -= damage;
 
         if (currentHP <= 0)
         {
-            Die();  
+            Die();
         }
     }
 
     private void Die()
     {
-        Destroy(gameObject); 
+        Destroy(gameObject);
     }
 }

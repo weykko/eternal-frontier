@@ -4,26 +4,26 @@ using Pathfinding;
 
 public class Enemy : MonoBehaviour
 {
-    private Animator animator;
+    public Animator animator;
     public Transform target;
-    private float attackRange = 7f;
+    private float attackRange = 1.44f;
     private float attackDelay = 1.67f;
     private float attackTimer = 1.17f;
     private float moveSpeed = 4f;
     private Tower_script towerScript;
 
-    private Seeker seeker;  //  Seeker
-    private Path path;      // Ссылка на путь
+    private Seeker seeker;
+    private Path path;
     private int currentWaypoint = 0;
-    private float pathUpdateInterval = 1.5f; 
+    private float pathUpdateInterval = 1.5f;
     private float pathUpdateTimer = 0f;
 
-    private Vector3 lastDirection; // последнее направление движения
+    private Vector3 lastDirection;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-        seeker = GetComponent<Seeker>();  
+        seeker = GetComponent<Seeker>();
         FindNearestTarget();
         if (target != null)
         {
@@ -45,7 +45,8 @@ public class Enemy : MonoBehaviour
         }
 
         float distance = Vector3.Distance(transform.position, target.position);
-        Debug.Log($"Расстояние до цели: {distance}");
+
+        RotateTowards(target.position);
 
         pathUpdateTimer += Time.deltaTime;
         if (pathUpdateTimer >= pathUpdateInterval && seeker.IsDone())
@@ -54,7 +55,6 @@ public class Enemy : MonoBehaviour
             pathUpdateTimer = 0f;
         }
 
-        // Проверка радиуса атаки
         if (distance <= attackRange)
         {
             animator.SetBool("IsAttacking", true);
@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
 
             if (distanceToTarget <= attackRange)
             {
-                return; 
+                return;
             }
 
             Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
@@ -91,6 +91,17 @@ public class Enemy : MonoBehaviour
             {
                 currentWaypoint++;
             }
+        }
+    }
+
+    private void RotateTowards(Vector3 targetPosition)
+    {
+        Vector3 direction = targetPosition - transform.position;
+        direction.y = 0;
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
         }
     }
 
@@ -114,6 +125,11 @@ public class Enemy : MonoBehaviour
         {
             target = nearestTower.transform;
             towerScript = target.GetComponent<Tower_script>();
+
+            if (towerScript != null)
+            {
+                attackRange = towerScript.AttackRange;
+            }
         }
         else
         {
@@ -150,20 +166,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void RotateTowards(Vector3 direction)
-    {
-        if (direction != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
-        }
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle")) // при столкновении с объектом с тегом "Obstacle" поворачиваемся
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Vector3 newDirection = Vector3.Cross(lastDirection, Vector3.up).normalized;// Меняем направление движения, используя последнее известное направление
+            Vector3 newDirection = Vector3.Cross(lastDirection, Vector3.up).normalized;
             RotateTowards(newDirection);
         }
     }
