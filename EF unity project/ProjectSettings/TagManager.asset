@@ -4,6 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Interactable
+  tags: []
+  tags:
   - Tower
   - Enemy
   - Obstacle

@@ -12,6 +12,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Second_Tower Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4324430115655468767, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350248769193890510, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
+      propertyPath: m_Size.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350248769193890510, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
+      propertyPath: m_Size.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350248769193890510, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
+      propertyPath: m_Size.z
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350248769193890510, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8002310630976062548, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -23.864021
@@ -51,6 +71,10 @@ PrefabInstance:
     - target: {fileID: 8002310630976062548, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8837870651172407756, guid: c7cc6402bf7f6604ea60cbeb7b8e375f, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

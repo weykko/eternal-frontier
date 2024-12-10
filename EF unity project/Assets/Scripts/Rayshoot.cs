@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rayshoot : MonoBehaviour
 {
-    public float damage = 15;
+    public float damage = 10;
 
     public void Shoot()
     {

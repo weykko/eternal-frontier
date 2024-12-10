@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    private float health = 100;
+    private float health = 20;
     
     public void hit(float delta)
     {

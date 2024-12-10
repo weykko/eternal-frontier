@@ -132,3 +132,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsOccupied: 0
   Occupant: {fileID: 0}
+  height: 0

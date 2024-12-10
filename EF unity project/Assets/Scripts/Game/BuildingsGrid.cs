@@ -6,22 +6,23 @@ public class BuildingsGrid : MonoBehaviour
 
     private Building[,] grid;
     private Building flyingBuilding;
+    private Building upgradePrefab; // Префаб для замены
     private Camera mainCamera;
 
-    private float cellSize; // Размер ячейки
-    private Vector3 planeOrigin; // Левый нижний угол
-    private bool isRotated = false; // Состояние поворота
+    private float cellSize;
+    private Vector3 planeOrigin;
+    private bool isRotated = false;
 
     private void Awake()
     {
         grid = new Building[GridSize.x, GridSize.y];
         mainCamera = Camera.main;
-        float planeSize = transform.localScale.x * 10f; // Это потому что у меня scale 10
+        float planeSize = transform.localScale.x * 10f;
         cellSize = planeSize / GridSize.x;
-        planeOrigin = transform.position - new Vector3(planeSize / 2, 0, planeSize / 2); 
+        planeOrigin = transform.position - new Vector3(planeSize / 2, 0, planeSize / 2);
     }
 
-    public void StartPlacingBuilding(Building buildingPrefab)
+    public void StartPlacingBuilding(Building buildingPrefab, Building replacementPrefab)
     {
         if (flyingBuilding != null)
         {
@@ -29,7 +30,8 @@ public class BuildingsGrid : MonoBehaviour
         }
 
         flyingBuilding = Instantiate(buildingPrefab);
-        isRotated = false; 
+        upgradePrefab = replacementPrefab; // Сохраняем ссылку на префаб для замены
+        isRotated = false;
     }
 
     private void Update()
@@ -58,8 +60,8 @@ public class BuildingsGrid : MonoBehaviour
 
                 if (available && IsPlaceTaken(x, y, buildingSize)) available = false;
 
-                flyingBuilding.transform.position = new Vector3(x * cellSize, 0, y * cellSize) + planeOrigin; 
-                flyingBuilding.transform.rotation = Quaternion.Euler(0, isRotated ? 90 : 0, 0); // поворот здания
+                flyingBuilding.transform.position = new Vector3(x * cellSize, 0, y * cellSize) + planeOrigin;
+                flyingBuilding.transform.rotation = Quaternion.Euler(0, isRotated ? 90 : 0, 0);
 
                 flyingBuilding.SetTransparent(available);
 
@@ -69,7 +71,7 @@ public class BuildingsGrid : MonoBehaviour
                 }
                 else if (Input.GetMouseButtonDown(1))
                 {
-                    isRotated = !isRotated; // вращение здания
+                    isRotated = !isRotated;
                 }
             }
         }
@@ -96,6 +98,14 @@ public class BuildingsGrid : MonoBehaviour
             {
                 grid[placeX + x, placeY + y] = flyingBuilding;
             }
+        }
+
+        if (upgradePrefab != null)
+        {
+            Vector3 position = flyingBuilding.transform.position;
+            Quaternion rotation = flyingBuilding.transform.rotation;
+            Destroy(flyingBuilding.gameObject);
+            flyingBuilding = Instantiate(upgradePrefab, position, rotation);
         }
 
         flyingBuilding.SetNormal();
