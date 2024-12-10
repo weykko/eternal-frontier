@@ -4,8 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Interactable
+  tags: []
+  tags:
   - Tower
   - Enemy
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -13,7 +17,7 @@ TagManager:
   - enemies
   - Water
   - UI
-  - 
+  - Obstacle
   - 
   - 
   - 

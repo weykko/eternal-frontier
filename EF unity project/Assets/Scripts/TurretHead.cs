@@ -27,10 +27,12 @@ public class TurretHead : MonoBehaviour {
         if (currentTarget)
         {
             RotateTowards(currentTarget);
-            if (Time.time >= nextTimeToFire)
+            float currentTime = Time.time;
+            if (currentTime >= nextTimeToFire)
             {
-                nextTimeToFire += 1f / fireRate;
+                nextTimeToFire = currentTime + 1f / fireRate;
                 shooter.Shoot();
+                Debug.Log(nextTimeToFire);
             }
         }
     }
@@ -41,7 +43,6 @@ public class TurretHead : MonoBehaviour {
         if (!targets.Contains(target))
         {
             targets.Add(target);
-            Debug.Log("Target added to turret: " + target.name);
         }
     }
 

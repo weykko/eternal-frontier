@@ -1,46 +1,48 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class Attack_anim : StateMachineBehaviour
+public class AttackState : StateMachineBehaviour
 {
-    Transform target;
-    public float attackRange = 15;
-    private bool isAttacking = false;
-    NavMeshAgent agent;
-    
+    private float attackRange = 1.44f;
+    private float attackDelay = 1.67f;
+    private float attackTimer = 1.17f;
+    private Tower_script towerScript;
+    private Transform target;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        target = GameObject.FindGameObjectWithTag("Tower").transform;
-        agent = animator.GetComponent<NavMeshAgent>();
+        Enemy enemyScript = animator.GetComponent<Enemy>();
+        if (enemyScript != null)
+        {
+            target = enemyScript.target;
+            towerScript = target?.GetComponent<Tower_script>();
+        }
+        attackTimer = 0f; 
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.transform.LookAt(target);
+        if (target == null || towerScript == null)
+        {
+            return;
+        }
+
         float distance = Vector3.Distance(animator.transform.position, target.position);
 
-        if (distance < attackRange)
+        if (distance <= attackRange)
         {
-            
-            animator.SetBool("IsAttacking", true);
-           
-           
-        }
-        else
-        {
-            
-            animator.SetBool("IsAttacking", false);
-         
+            attackTimer += Time.deltaTime;
+            if (attackTimer >= attackDelay)
+            {
+                towerScript.TakeDamage(10); 
+                attackTimer = 0f;
+            }
         }
     }
 
+    // Вызывается при выходе из состояния Attack
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        isAttacking = false; 
     }
 }
-

@@ -18,22 +18,20 @@ public class BaseTurret : MonoBehaviour
             Target tar = collider.GetComponent<Target>();
             if (tar != null)
             {
-                Debug.Log("Target found in range at start: " + collider.gameObject.name);
                 turretHead.AddTarget(collider.gameObject);  // Add enemies already inside the range to the entered list
             }
         }
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigerred");
         // Check if the object is on the enemy layer
         if ((enemyLayerMask.value & (1 << other.gameObject.layer)) > 0)
         {
             Target target = other.GetComponent<Target>();
             if (target != null)
             {
-                Debug.Log("Enemy detected: " + other.gameObject.name);
                 enteredEnemies.Add(other);
 
                 // Pass the detected enemy to TurretHead

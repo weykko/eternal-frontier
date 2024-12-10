@@ -7,35 +7,46 @@ using static UnityEngine.GraphicsBuffer;
 
 public class idle_script : StateMachineBehaviour
 {
-    Transform target;
-    public float attackRange = 15;
-    NavMeshAgent agent;
-
+    //Transform target;
+    //public float attackRange = 11;
+    //NavMeshAgent agent;
     
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        target = GameObject.FindGameObjectWithTag("Tower").transform;
-    }
+    //private Enemy enemyScript;
 
-    
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        animator.transform.LookAt(target);
-        float distance = Vector3.Distance(animator.transform.position, target.position);
-        if (distance < attackRange)
-        {
-            
-            animator.SetBool("IsAttacking", true);
 
-            
-        }
-    }
 
-    
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    enemyScript = animator.GetComponent<Enemy>();
 
-    }
+    //    target = enemyScript?.GetTarget();
 
-    
+    //}
+
+
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+
+    //    target = enemyScript?.GetTarget();
+    //    float distance = Vector3.Distance(animator.transform.position, target.position);
+    //    Debug.Log($"Расстояние до цели: {distance}");
+    //    if (distance < attackRange)
+    //    {
+
+    //        animator.SetBool("IsAttacking", true);
+    //        Debug.Log($"работает");
+
+
+    //    }
+
+    //}
+
+
+    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+
+    //}
+
+
+
 }

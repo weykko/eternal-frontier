@@ -1,45 +1,154 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
+using Pathfinding;
 
 public class Enemy : MonoBehaviour
 {
-    private Animator animator;  
-    public Transform target; // башня
-    private float attackRange = 1; 
-    private float attackDelay = 1.67f;  // Задержка между атаками
-    private float attackTimer = 1.17f;  // Таймер для задержки между атаками
-    private float moveSpeed = 0.5f;
+    public Animator animator;
+    public Transform target;
+    private float attackRange = 1.44f;
+    private float attackDelay = 1.67f;
+    private float attackTimer = 1.17f;
+    private float moveSpeed = 4f;
+    private Tower_script towerScript;
 
-    private Tower_script towerScript;  // Ссылка на скрипт башни для нанесения урона
+    private Seeker seeker;
+    private Path path;
+    private int currentWaypoint = 0;
+    private float pathUpdateInterval = 1.5f;
+    private float pathUpdateTimer = 0f;
+
+    private Vector3 lastDirection;
 
     private void Start()
     {
-        animator = GetComponent<Animator>();  
-
+        animator = GetComponent<Animator>();
+        seeker = GetComponent<Seeker>();
+        FindNearestTarget();
         if (target != null)
         {
-            towerScript = target.GetComponent<Tower_script>(); 
+            towerScript = target.GetComponent<Tower_script>();
+        }
+        if (seeker != null && target != null)
+        {
+            seeker.StartPath(transform.position, target.position, OnPathComplete);
         }
     }
 
     private void Update()
     {
-        if (target != null)
+        if (target == null)
         {
-            float distance = Vector3.Distance(transform.position, target.position);
-            Debug.Log($"Расстояние до цели: {distance}, радиус атаки: {attackRange}"); // для проверки условия атаки на консоли(потом убрать)!!!!!!
+            FindNearestTarget();
+            animator.SetBool("IsAttacking", false);
+            return;
+        }
 
-            if (distance <= attackRange + 8)
+        float distance = Vector3.Distance(transform.position, target.position);
+
+        RotateTowards(target.position);
+
+        pathUpdateTimer += Time.deltaTime;
+        if (pathUpdateTimer >= pathUpdateInterval && seeker.IsDone())
+        {
+            seeker.StartPath(transform.position, target.position, OnPathComplete);
+            pathUpdateTimer = 0f;
+        }
+
+        if (distance <= attackRange)
+        {
+            animator.SetBool("IsAttacking", true);
+            Attack();
+        }
+        else
+        {
+            animator.SetBool("IsAttacking", false);
+            if (path != null && currentWaypoint < path.vectorPath.Count)
             {
-                Attack();
+                MoveTowardsTarget();
             }
-            else
+        }
+    }
+
+    private void MoveTowardsTarget()
+    {
+        if (path != null && target != null)
+        {
+            float distanceToTarget = Vector3.Distance(transform.position, target.position);
+
+            if (distanceToTarget <= attackRange)
             {
-                transform.position = Vector3.Lerp(transform.position, target.position, Time.deltaTime * moveSpeed);
+                return;
             }
+
+            Vector3 direction = (path.vectorPath[currentWaypoint] - transform.position).normalized;
+            lastDirection = direction;
+
+            Vector3 moveDelta = direction * moveSpeed * Time.deltaTime;
+            transform.position += moveDelta;
+
+            if (Vector3.Distance(transform.position, path.vectorPath[currentWaypoint]) < 0.1f)
+            {
+                currentWaypoint++;
+            }
+        }
+    }
+
+    private void RotateTowards(Vector3 targetPosition)
+    {
+        Vector3 direction = targetPosition - transform.position;
+        direction.y = 0;
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
+    }
+
+    private void FindNearestTarget()
+    {
+        GameObject[] towers = GameObject.FindGameObjectsWithTag("Tower");
+        float shortestDistance = Mathf.Infinity;
+        GameObject nearestTower = null;
+
+        foreach (GameObject tower in towers)
+        {
+            float distance = Vector3.Distance(transform.position, tower.transform.position);
+            if (distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestTower = tower;
+            }
+        }
+
+        if (nearestTower != null)
+        {
+            target = nearestTower.transform;
+            towerScript = target.GetComponent<Tower_script>();
+
+            if (towerScript != null)
+            {
+                attackRange = towerScript.AttackRange;
+            }
+        }
+        else
+        {
+            target = null;
+            towerScript = null;
+        }
+
+        if (target != null && seeker != null)
+        {
+            seeker.StartPath(transform.position, target.position, OnPathComplete);
+        }
+    }
+
+    private void OnPathComplete(Path p)
+    {
+        if (!p.error)
+        {
+            path = p;
+            currentWaypoint = 0;
         }
     }
 
@@ -48,14 +157,21 @@ public class Enemy : MonoBehaviour
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackDelay)
         {
-           
-
             if (towerScript != null)
             {
                 towerScript.TakeDamage(10);
             }
 
-            attackTimer = 0f; 
+            attackTimer = 0f;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Vector3 newDirection = Vector3.Cross(lastDirection, Vector3.up).normalized;
+            RotateTowards(newDirection);
         }
     }
 }
